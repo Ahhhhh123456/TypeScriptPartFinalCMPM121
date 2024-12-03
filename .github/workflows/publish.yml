@@ -30,7 +30,7 @@ jobs:
 
       # Build the project using Vite
       - name: Build Project with Vite
-        run: npm run build  # This assumes "vite build" is defined in package.json
+        run: npm run build  # This uses the 'vite build' command from package.json
 
       - uses: actions/configure-pages@v5
 
