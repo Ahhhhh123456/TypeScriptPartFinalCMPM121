@@ -23,6 +23,10 @@ jobs:
           cache: "npm"
       - run: npm install
       - run: npm run build
+      
+      # Debugging: Check the contents of the dist directory
+      - run: ls -alh ./dist  # This will list the contents of the dist directory
+      
       - uses: actions/configure-pages@v3
       - uses: actions/upload-pages-artifact@v1
         with:
