@@ -1,36 +1,36 @@
 name: Deploy static content to Pages
 on:
   push:
-    branches: ["main"]
-  workflow_dispatch:
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+    branches:
+      - main  # Trigger deployment when changes are pushed to the main branch
+
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    env:
-      REPO_NAME: ${{ github.event.repository.name }}
+  build-and-deploy:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu image for the runner
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      # Check out the code
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      # Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 20
-          cache: "npm"
-      - run: npm install
-      - run: npm run build
-      
-      # Debugging: Check the contents of the dist directory
-      - run: ls -alh ./dist  # This will list the contents of the dist directory
-      
-      - uses: actions/configure-pages@v3
-      - uses: actions/upload-pages-artifact@v1
+          node-version: '16'  # Specify the Node.js version you want
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Build the project (optional, if you need a build step)
+      - name: Build project
+        run: npm run build  # Adjust this if you have a specific build script
+
+      # Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          # Upload dist directory
-          path: "./dist"
-      - id: deployment
-        uses: actions/deploy-pages@v1
+          branch: gh-pages      # The branch that will be used for deployment
+          folder: dist          # The folder containing the built project (your 'dist' folder)
+          token: ${{ secrets.GITHUB_TOKEN }}  # Automatically provided by GitHub Actions
