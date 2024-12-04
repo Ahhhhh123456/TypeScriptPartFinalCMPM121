@@ -205,7 +205,7 @@ For our tools and materials, it has pretty much stayed the same. Besides that, t
 * [F2.b] - We added three different plant types in a typescript separate file called PlantManager.ts. This file has three different types of plants that can be used at any time and they are randomly selected from the list. There is also an added growth manager added which handles the growth of the plants and when they are added.
 
 
-* [F2.c] - We swapped the entire programming langauge from javascript to typescript! All the .js files became .ts files. We decided to make the entire game typescript since we were having a hard time trying to find anotehr framework to swap to, and we had worked in typescript before so we thought it would be simpler to do so. We ended up running in to a lot of problems trying to get pages to work. We spent more time trying to get our game working on pages than actaully doing the swap.
+* [F2.c] - We swapped the entire programming langauge from javascript to typescript! All the .js files became .ts files. We decided to make the entire game typescript since we were having a hard time trying to find anotehr framework to swap to, and we had worked in typescript before so we thought it would be simpler to do so. We ended up running in to a lot of problems trying to get pages to work. We spent more time trying to get our game working on pages than actaully doing the swap. We also decided to make a new repository with the typescript version of the game. Here is the link to our javascript version of the game ([https://github.com/Ahhhhh123456/Cmpm-121-Final-Project])
 
 ## Reflection
 
