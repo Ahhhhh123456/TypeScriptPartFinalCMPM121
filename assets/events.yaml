@@ -1,0 +1,11 @@
+- event: "Grow plants"
+  time: 30
+  action: "increase flower growth"
+  
+- event: "Generate flower"
+  time: 50
+  action: "generate new flower"
+
+- event: "Increase water level"
+  time: 10
+  action: "increase water level by 2"

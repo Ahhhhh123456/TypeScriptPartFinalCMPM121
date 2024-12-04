@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: '/TypeScriptPartFinalCMPM121-TEST/', // Replace <REPO_NAME> with your repository name
+  base: '/Cmpm-121-Final-Project/', // Replace <REPO_NAME> with your repository name
 
   build: {
     outDir: 'dist',
