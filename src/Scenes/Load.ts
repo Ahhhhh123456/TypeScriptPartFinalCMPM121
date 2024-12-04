@@ -6,7 +6,7 @@ class Load extends Phaser.Scene {
 
   // Preload method to load assets
   preload(): void {
-    this.load.setPath("dist/assets/");
+    this.load.setPath("./assets/");
 
     // Load tileset image and map data
     this.load.image("tiny_town_tiles", "kenny-tiny-town-tilemap-packed.png");
