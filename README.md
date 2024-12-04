@@ -166,4 +166,47 @@ For our tools and materials, it has pretty much stayed the same. Besides that, t
 
 # How we satisfied the software requirements
 
-Work in progress
+* [F0.a] - same as last week
+
+
+* [F0.b] - same as last week
+
+
+* [F0.c] - same as last week
+
+
+* [F0.d] - same as last week
+
+
+* [F0.e] - same as last week
+
+
+* [F0.f] - same as last week
+
+
+* [F0.g] - same as last week
+
+
+* [F1.a] - same as last week
+
+
+* [F1.b] - same as last week
+
+
+* [F1.c] - same as last week
+
+
+* [F1.d] - Same as last week
+
+
+* [F2.a] - We added an event loader that would read events from a yaml file that would change certain factors to the game. The events would then be put in the event handler which would be in charge of changing the required settings in the game so the events would be true. There are console logs that can enabled to show the active events.
+
+
+* [F2.b] - We added three different plant types in a typescript separate file called PlantManager.ts. This file has three different types of plants that can be used at any time and they are randomly selected from the list. There is also an added growth manager added which handles the growth of the plants and when they are added.
+
+
+* [F2.c] - We swapped the entire programming langauge from javascript to typescript! All the .js files became .ts files. We decided to make the entire game typescript since we were having a hard time trying to find anotehr framework to swap to, and we had worked in typescript before so we thought it would be simpler to do so. We ended up running in to a lot of problems trying to get pages to work. We spent more time trying to get our game working on pages than actaully doing the swap.
+
+## Reflection
+
+We came to the realization that splitting up all the tasks into our "assigned" jobs was not very effective so we just started sectioning work based on workload, and if someone got stuck we would all work on that part together. We were initially trying our best to get the game working consistently without fault with refactoring as much as possible. But recently it has become challenging to stay up to date on refactoring since we are messing arround with things we dont fully understand speficily github pages. We wanted to make sure our game worked on pages before we started messign with things and refactoring the code we are using. The design has stayed pretty similar, the only difference is that we started working together as a team much more cohesively.
