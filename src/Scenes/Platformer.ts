@@ -136,6 +136,11 @@ class Platformer extends Phaser.Scene {
   private zKey!: Phaser.Input.Keyboard.Key;
   private yKey!: Phaser.Input.Keyboard.Key;
   private nKey!: Phaser.Input.Keyboard.Key;
+
+
+  private spaceButton!: Phaser.GameObjects.Image;
+
+  
   private undoStack: string[]; // Stack for undo states
   private redoStack: string[]; // Stack for redo states
 
@@ -248,6 +253,12 @@ class Platformer extends Phaser.Scene {
     });
     this.winText.setOrigin(0.5);
     this.winText.visible = false;
+
+    this.spaceButton = this.add.image(100, 100, 'spaceButtonImage')
+    .setInteractive()
+    .setScrollFactor(0)  // Make it stay fixed on screen
+    .setDepth(10);       // Ensure it's above other objects
+
 
     // Check for auto-save on game start
     this.checkAutoSave();
@@ -705,7 +716,34 @@ class Platformer extends Phaser.Scene {
 
       this.toggleLanguage();
     }
+   
+    this.spaceButton.on('pointerdown', () => {
+      const { row, col } = this.getPlayerTilePosition();
+      const tile = this.grid.getTile(row, col);
     
+      if (tile.growthLevel === 3) {
+        this.waterLevel += tile.waterLevel;
+    
+        if (this.currentLang === 'en') {
+          this.waterCountText.setText(`Water Count:  ${this.waterLevel}`);
+        } else {
+          this.waterCountText.setText(`${this.langFile['waterCount']} ${this.waterLevel}`);
+        }
+    
+        this.map.putTileAt(26, col, row, true, this.grassLayer);
+        this.grid.setTile(row, col, tile.sunLevel, tile.waterLevel, "dirt", 0);
+        this.reapedFlowers++;
+    
+        if (this.currentLang === 'en') {
+          this.reapedFlowersText.setText(`Reaped Flowers: ${this.reapedFlowers}`);
+        } else {
+          this.reapedFlowersText.setText(`${this.langFile['reapCount']} ${this.reapedFlowers}`);
+        }
+    
+        this.checkWinCondition();
+      }
+    });
+
   }
 }
 
