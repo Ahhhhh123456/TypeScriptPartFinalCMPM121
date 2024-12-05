@@ -27,6 +27,20 @@ class Load extends Phaser.Scene {
     this.load.image("tiny_town_tiles", "kenny-tiny-town-tilemap-packed.png");
     this.load.tilemapTiledJSON("map", "TinyTownMap.json");
 
+
+    this.load.image("scythe", "scythe.png");
+    this.load.image("one", "one.png");
+    this.load.image("two", "two.png");
+    this.load.image("z", "z.png");
+    this.load.image("y", "y.png");
+    this.load.image("n", "n.png");
+    this.load.image("l", "L.png");
+
+    this.load.image("up", "up.png");
+    this.load.image("down", "down.png");
+    this.load.image("left", "left.png");
+    this.load.image("right", "right.png");
+
     // Load the character spritesheet and associated JSON atlas
     this.load.atlas(
       "platformer_characters",

@@ -139,8 +139,30 @@ class Platformer extends Phaser.Scene {
 
 
   private spaceButton!: Phaser.GameObjects.Image;
+  private saveSlot1Button!: Phaser.GameObjects.Image;
+  private saveSlot2Button!: Phaser.GameObjects.Image;
+  private zButton!: Phaser.GameObjects.Image;
+  private yButton!: Phaser.GameObjects.Image;
+  private nButton!: Phaser.GameObjects.Image;
+  private lButton!: Phaser.GameObjects.Image;
+  private upButton!: Phaser.GameObjects.Image;
+  private downButton!: Phaser.GameObjects.Image;
+  private leftButton!: Phaser.GameObjects.Image;
+  private rightButton!: Phaser.GameObjects.Image;
 
-  
+
+  private spaceButtonDisabled: boolean = false;
+  private saveSlot1ButtonDisabled: boolean = false;
+  private saveSlot2ButtonDisabled: boolean = false;
+  private zButtonDisabled: boolean = false;
+  private yButtonDisabled: boolean = false;
+  private nButtonDisabled: boolean = false;
+  private lButtonDisabled: boolean = false;
+  private upButtonDisabled: boolean = false;
+  private downButtonDisabled: boolean = false;
+  private leftButtonDisabled: boolean = false;
+  private rightButtonDisabled: boolean = false;
+
   private undoStack: string[]; // Stack for undo states
   private redoStack: string[]; // Stack for redo states
 
@@ -249,17 +271,89 @@ class Platformer extends Phaser.Scene {
 
     this.winText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, `You Win!`, {
       fontSize: "64px",
-      color: "#00000",
+      color: "#ffffff",
     });
     this.winText.setOrigin(0.5);
     this.winText.visible = false;
 
-    this.spaceButton = this.add.image(100, 100, 'spaceButtonImage')
+    this.spaceButton = this.add.image(this.scale.width - 50, this.scale.height - 50, 'scythe')
     .setInteractive()
     .setScrollFactor(0)  // Make it stay fixed on screen
     .setDepth(10);       // Ensure it's above other objects
+  
+    this.spaceButton.setScale(0.1);
 
 
+    this.saveSlot1Button = this.add.image(this.scale.width - 150, this.scale.height - 50, 'one')
+      .setInteractive()
+      .setScrollFactor(0)
+      .setDepth(10);
+
+      this.saveSlot1Button.setScale(0.1);
+
+    this.saveSlot2Button = this.add.image(this.scale.width - 100, this.scale.height - 50, 'two')
+    .setInteractive()
+    .setScrollFactor(0)
+    .setDepth(10);
+
+    this.saveSlot2Button.setScale(0.1);
+
+    this.zButton = this.add.image(this.scale.width - 200, this.scale.height - 50, 'z')
+    .setInteractive()
+    .setScrollFactor(0)
+    .setDepth(10);
+
+    this.zButton.setScale(0.09);
+
+    this.yButton = this.add.image(this.scale.width - 250, this.scale.height - 50, 'y')
+    .setInteractive()
+    .setScrollFactor(0)
+    .setDepth(10);
+
+    this.yButton.setScale(0.09);
+
+    this.nButton = this.add.image(this.scale.width - 300, this.scale.height - 50, 'n')
+    .setInteractive()
+    .setScrollFactor(0)
+    .setDepth(10);
+
+    this.nButton.setScale(0.1);
+
+    this.lButton = this.add.image(this.scale.width - 350, this.scale.height - 50, 'l')
+    .setInteractive()
+    .setScrollFactor(0)
+    .setDepth(10);
+
+    this.lButton.setScale(0.09);
+
+    this.upButton = this.add.image(this.scale.width - 550, this.scale.height - 50, 'up')
+    .setInteractive()
+    .setScrollFactor(0)
+    .setDepth(10);
+
+    this.upButton.setScale(0.09);
+
+    this.downButton = this.add.image(this.scale.width - 500, this.scale.height - 50, 'down')
+    .setInteractive()
+    .setScrollFactor(0)
+    .setDepth(10);
+
+    this.downButton.setScale(0.022);
+
+    this.leftButton = this.add.image(this.scale.width - 600, this.scale.height - 50, 'left')
+    .setInteractive()
+    .setScrollFactor(0)
+    .setDepth(10);
+
+    this.leftButton.setScale(0.022);
+
+    this.rightButton = this.add.image(this.scale.width - 450, this.scale.height - 50, 'right')
+    .setInteractive()
+    .setScrollFactor(0)
+    .setDepth(10);
+
+    this.rightButton.setScale(0.022);
+    
     // Check for auto-save on game start
     this.checkAutoSave();
   }
@@ -291,7 +385,7 @@ class Platformer extends Phaser.Scene {
       this.winText.destroy();
       this.winText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, `${this.langFile['Win']}`, {
         fontSize: "64px",
-        color: "#00000",
+        color: "#ffffff",
       });
       this.winText.setOrigin(0.5);
     }
@@ -618,23 +712,6 @@ class Platformer extends Phaser.Scene {
     if (this.reapedFlowers >= 1 && !this.won) {
       this.won = true;
       this.winText.visible = true;
-
-      // f3
-      // if (this.currentLang === 'en') {
-      //   const winText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, `You Win!`, {
-      //     fontSize: "64px",
-      //     color: "#00000",
-      //   });
-      //   winText.setOrigin(0.5);
-      // }
-      // else {
-      //   const winText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, `You Win!`, {
-      //     fontSize: "64px",
-      //     color: "#00000",
-      //   });
-      //   winText.setOrigin(0.5);
-      // }
-
     }
   }
 
@@ -656,6 +733,64 @@ class Platformer extends Phaser.Scene {
         this.movePlayer(0, 1);
       }
     }
+
+    if (!this.isMoving) {
+      this.upButton.on('pointerdown', () => {
+        if (this.upButtonDisabled) return; // Ignore the event if the button is disabled
+        
+        this.isMoving = true;
+        this.movePlayer(0, -1);
+    
+        this.upButtonDisabled = true; // Disable the button
+        // Optionally, re-enable the button after some condition or delay
+        setTimeout(() => {
+            this.upButtonDisabled = false; // Re-enable the button (if needed)
+        }, 500); // Adjust delay as necessary
+      }); 
+      
+      this.downButton.on('pointerdown', () => {
+        if (this.downButtonDisabled) return; // Ignore the event if the button is disabled
+        
+        this.isMoving = true;
+        this.movePlayer(0, 1);
+    
+        this.downButtonDisabled = true; // Disable the button
+        // Optionally, re-enable the button after some condition or delay
+        setTimeout(() => {
+            this.downButtonDisabled = false; // Re-enable the button (if needed)
+        }, 500); // Adjust delay as necessary
+      }); 
+
+      this.leftButton.on('pointerdown', () => {
+        if (this.leftButtonDisabled) return; // Ignore the event if the button is disabled
+        
+        this.isMoving = true;
+        this.movePlayer(-1, 0);
+        this.player.setFlipX(false);
+    
+        this.leftButtonDisabled = true; // Disable the button
+        // Optionally, re-enable the button after some condition or delay
+        setTimeout(() => {
+            this.leftButtonDisabled = false; // Re-enable the button (if needed)
+        }, 500); // Adjust delay as necessary
+      }); 
+      
+      this.rightButton.on('pointerdown', () => {
+        if (this.rightButtonDisabled) return; // Ignore the event if the button is disabled
+        
+        this.isMoving = true;
+        this.movePlayer(1, 0);
+        this.player.setFlipX(true);
+    
+        this.rightButtonDisabled = true; // Disable the button
+        // Optionally, re-enable the button after some condition or delay
+        setTimeout(() => {
+            this.rightButtonDisabled = false; // Re-enable the button (if needed)
+        }, 500); // Adjust delay as necessary
+      }); 
+
+    }
+
 
     if (this.spaceKey.isDown) {
       const { row, col } = this.getPlayerTilePosition();
@@ -686,38 +821,9 @@ class Platformer extends Phaser.Scene {
       }
     }
 
-    if (Phaser.Input.Keyboard.JustDown(this.oneKey)) {
-      //console.log("Saving to Slot 1!");
-      this.saveGame("gameStateSlot1");
-    }
-
-    if (Phaser.Input.Keyboard.JustDown(this.twoKey)) {
-      //console.log("Saving to Slot 2!");
-      this.saveGame("gameStateSlot2");
-    }
-
-    if (Phaser.Input.Keyboard.JustDown(this.lKey)) {
-      //  f3
-      const loadSlot = prompt("Enter save slot to load (1 or 2):");
-      const saveKey = loadSlot === "2" ? "gameStateSlot2" : "gameStateSlot1";
-      //console.log(`Loading from ${saveKey}!`);
-      this.loadGame(saveKey);
-    }
-
-    if (Phaser.Input.Keyboard.JustDown(this.zKey)) {
-      this.undo();
-    }
-
-    if (Phaser.Input.Keyboard.JustDown(this.yKey)) {
-      this.redo();
-    }
-
-    if (Phaser.Input.Keyboard.JustDown(this.nKey)) {
-
-      this.toggleLanguage();
-    }
-   
     this.spaceButton.on('pointerdown', () => {
+      if (this.spaceButtonDisabled) return; // Ignore the event if the button is disabled
+      
       const { row, col } = this.getPlayerTilePosition();
       const tile = this.grid.getTile(row, col);
     
@@ -742,6 +848,129 @@ class Platformer extends Phaser.Scene {
     
         this.checkWinCondition();
       }
+  
+      this.spaceButtonDisabled = true; // Disable the button
+      // Optionally, re-enable the button after some condition or delay
+      setTimeout(() => {
+          this.spaceButtonDisabled = false; // Re-enable the button (if needed)
+      }, 500); // Adjust delay as necessary
+    });     
+
+    if (Phaser.Input.Keyboard.JustDown(this.oneKey)) {
+      //console.log("Saving to Slot 1!");
+      this.saveGame("gameStateSlot1");
+    }
+
+    this.saveSlot1Button.on('pointerdown', () => {
+      if (this.saveSlot1ButtonDisabled) return; // Ignore the event if the button is disabled
+      
+      console.log("Saving to Slot 1!");
+      this.saveGame("gameStateSlot1");
+  
+      this.saveSlot1ButtonDisabled = true; // Disable the button
+      // Optionally, re-enable the button after some condition or delay
+      setTimeout(() => {
+          this.saveSlot1ButtonDisabled = false; // Re-enable the button (if needed)
+      }, 500); // Adjust delay as necessary
+    });     
+
+
+    if (Phaser.Input.Keyboard.JustDown(this.twoKey)) {
+      //console.log("Saving to Slot 2!");
+      this.saveGame("gameStateSlot2");
+    }
+
+    this.saveSlot2Button.on('pointerdown', () => {
+      //console.log("Saving to Slot 2!");
+      this.saveGame("gameStateSlot2");
+    });
+
+    this.saveSlot2Button.on('pointerdown', () => {
+      if (this.saveSlot2ButtonDisabled) return; // Ignore the event if the button is disabled
+
+      console.log("Saving to Slot 2!");
+      this.saveGame("gameStateSlot2");
+  
+      this.saveSlot2ButtonDisabled = true; // Disable the button
+      // Optionally, re-enable the button after some condition or delay
+      setTimeout(() => {
+          this.saveSlot2ButtonDisabled = false; // Re-enable the button (if needed)
+      }, 500); // Adjust delay as necessary
+    });     
+
+    if (Phaser.Input.Keyboard.JustDown(this.lKey)) {
+      //  f3
+      const loadSlot = prompt("Enter save slot to load (1 or 2):");
+      const saveKey = loadSlot === "2" ? "gameStateSlot2" : "gameStateSlot1";
+      //console.log(`Loading from ${saveKey}!`);
+      this.loadGame(saveKey);
+    }
+  
+    this.lButton.on('pointerdown', () => {
+      if (this.lButtonDisabled) return; // Ignore the event if the button is disabled
+      
+      const loadSlot = prompt("Enter save slot to load (1 or 2):");
+      const saveKey = loadSlot === "2" ? "gameStateSlot2" : "gameStateSlot1";
+      //console.log(`Loading from ${saveKey}!`);
+      this.loadGame(saveKey);
+  
+      this.lButtonDisabled = true; // Disable the button
+      // Optionally, re-enable the button after some condition or delay
+      setTimeout(() => {
+          this.lButtonDisabled = false; // Re-enable the button (if needed)
+      }, 500); // Adjust delay as necessary
+    }); 
+
+    if (Phaser.Input.Keyboard.JustDown(this.zKey)) {
+
+      this.undo();
+    }
+
+    this.zButton.on('pointerdown', () => {
+      if (this.zButtonDisabled) return; // Ignore the event if the button is disabled
+
+      this.undo();
+  
+      this.zButtonDisabled = true; // Disable the button
+      // Optionally, re-enable the button after some condition or delay
+      setTimeout(() => {
+          this.zButtonDisabled = false; // Re-enable the button (if needed)
+      }, 500); // Adjust delay as necessary
+    }); 
+
+    if (Phaser.Input.Keyboard.JustDown(this.yKey)) {
+      this.redo();
+    }
+
+    this.yButton.on('pointerdown', () => {
+      if (this.yButtonDisabled) return; // Ignore the event if the button is disabled
+      
+      this.redo();
+  
+      this.yButtonDisabled = true; // Disable the button
+      // Optionally, re-enable the button after some condition or delay
+      setTimeout(() => {
+          this.yButtonDisabled = false; // Re-enable the button (if needed)
+      }, 500); // Adjust delay as necessary
+    });
+  
+
+    if (Phaser.Input.Keyboard.JustDown(this.nKey)) {
+
+      this.toggleLanguage();
+    }
+   
+    this.nButton.on('pointerdown', () => {
+      if (this.nButtonDisabled) return; // Ignore the event if the button is disabled
+      
+
+      this.toggleLanguage();
+  
+      this.nButtonDisabled = true; // Disable the button
+      // Optionally, re-enable the button after some condition or delay
+      setTimeout(() => {
+          this.nButtonDisabled = false; // Re-enable the button (if needed)
+      }, 500); // Adjust delay as necessary
     });
 
   }
