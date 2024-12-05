@@ -1,3 +1,6 @@
+import { PlantGrowthManager } from '../GameLogic/PlantManager';  // No `.js` in TypeScript imports to rely on module resolution
+
+
 class TileGrid {
   rows: number;
   cols: number;
