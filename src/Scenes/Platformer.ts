@@ -243,6 +243,12 @@ class Platformer extends Phaser.Scene {
       )
       .setScale(2);
 
+    const growthManager = new PlantGrowthManager();
+    const flower = growthManager.addPlant("Flower");  // Add a new flower to the manager
+    const cactus = growthManager.addPlant("Cactus");  // Add a new cactus to the manager
+    const tree = growthManager.addPlant("Tree");      // Add a new tree to the manager
+
+
     // Cursor and key setup
     if (this.input.keyboard) {
       this.cursors = this.input.keyboard.createCursorKeys();
@@ -360,6 +366,8 @@ class Platformer extends Phaser.Scene {
     // Check for auto-save on game start
     this.checkAutoSave();
   }
+
+
 
   
   refreshText(): void {
