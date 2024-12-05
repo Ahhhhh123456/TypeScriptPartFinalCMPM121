@@ -1,12 +1,27 @@
+interface LanguageData {
+  waterCount: string;
+  reapCount: string;
+  Win: string;
+  continue: string;
+  saveSlot: string;
+}
+
 class Load extends Phaser.Scene {
+  private langData: LanguageData | null = null;
+
   // Constructor defining the scene key
   constructor() {
     super("loadScene");
+    
   }
 
   // Preload method to load assets
   preload(): void {
     this.load.setPath("./assets/");
+
+    this.load.json('lang_en', "en.json");
+    this.load.json('lang_ch', "ch.json");
+    this.load.json("lang_ar", "ar.json");
 
     // Load tileset image and map data
     this.load.image("tiny_town_tiles", "kenny-tiny-town-tilemap-packed.png");
@@ -22,6 +37,8 @@ class Load extends Phaser.Scene {
 
   // Create method to define animation and transition to the next scene
   create(): void {
+    this.langData = this.cache.json.get('language');
+
     // Define the walking animation
     this.anims.create({
       key: "walk",

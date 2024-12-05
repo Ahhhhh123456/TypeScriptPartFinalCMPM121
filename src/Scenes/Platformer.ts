@@ -119,7 +119,6 @@ getNeighbors(row: number, col: number): { sunLevel: number, waterLevel: number, 
 }
 }
 
-
 class Platformer extends Phaser.Scene {
   private reapedFlowers: number;
   private waterLevel: number;
@@ -136,7 +135,7 @@ class Platformer extends Phaser.Scene {
   private lKey!: Phaser.Input.Keyboard.Key;
   private zKey!: Phaser.Input.Keyboard.Key;
   private yKey!: Phaser.Input.Keyboard.Key;
-
+  private nKey!: Phaser.Input.Keyboard.Key;
   private undoStack: string[]; // Stack for undo states
   private redoStack: string[]; // Stack for redo states
 
@@ -144,6 +143,16 @@ class Platformer extends Phaser.Scene {
   private tileset!: Phaser.Tilemaps.Tileset; // Tileset used in the tilemap
   private backgroundLayer!: Phaser.Tilemaps.TilemapLayer; // Background layer
   private grassLayer!: Phaser.Tilemaps.TilemapLayer; // Grass layer
+
+
+  private reapedFlowersText!: Phaser.GameObjects.Text; 
+  private waterCountText!: Phaser.GameObjects.Text; 
+  private winText!: Phaser.GameObjects.Text; 
+  private langFile: any;
+  private currentLang: string = 'en'; // Keep track of the current language
+
+
+
 
   constructor() {
     super("platformerScene");
@@ -157,13 +166,15 @@ class Platformer extends Phaser.Scene {
   }
 
   create(): void {
+
+
     // Set game description UI
     const descriptionElement = document.getElementById("description");
     if (descriptionElement) {
       descriptionElement.innerHTML =
         '<h2>Final Project<br>Arrow keys to move, space to reap, z to undo, y to redo, l to load <br>1 or 2 to save game state in slot 1 or 2</h2>';
     }
-
+    //test
     // Grid dimensions
     const rows = 10;
     const cols = 10;
@@ -211,12 +222,96 @@ class Platformer extends Phaser.Scene {
       this.lKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
       this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
       this.yKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Y);
+      this.nKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
     } else {
       throw new Error("Keyboard input is not available");
     }
 
+    //f3
+    this.waterCountText = this.add.text(16, 40, `Water Count: ${this.waterLevel}`, {
+      fontSize: "24px",
+      color: "#ffffff",
+      fontFamily: "Arial",
+    });
+
+    
+    this.reapedFlowersText = this.add.text(16, 16, `Reaped Flowers: ${this.reapedFlowers}`, {
+      fontSize: "24px",
+      color: "#ffffff",
+      fontFamily: "Arial",
+    });
+
+
+    this.winText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, `You Win!`, {
+      fontSize: "64px",
+      color: "#00000",
+    });
+    this.winText.setOrigin(0.5);
+    this.winText.visible = false;
+
     // Check for auto-save on game start
     this.checkAutoSave();
+  }
+
+  
+  refreshText(): void {
+    // Dynamically update text content using the current language file
+    //console.log(this.langFile['waterCount']); // Example JSON key: "title"
+    //console.log(this.langFile['Win']); // Example JSON key: "instructions"
+    
+    this.waterCountText.visible = false;
+    this.waterCountText = this.add.text(16, 40, `${this.langFile['waterCount']} ${this.waterLevel}`, {
+      fontSize: "24px",
+      color: "#ffffff",
+      fontFamily: "Arial",
+    });
+    this.waterCountText.visible = true;
+    
+    this.reapedFlowersText.visible = false;
+    this.reapedFlowersText = this.add.text(16, 16, `${this.langFile['reapCount']} ${this.reapedFlowers}`, {
+      fontSize: "24px",
+      color: "#ffffff",
+      fontFamily: "Arial",
+    });
+    this.reapedFlowersText.visible = true;
+
+    if (this.won == true) {
+      console.log("hi");
+      this.winText.destroy();
+      this.winText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, `${this.langFile['Win']}`, {
+        fontSize: "64px",
+        color: "#00000",
+      });
+      this.winText.setOrigin(0.5);
+    }
+    
+
+    const descriptionElement = document.getElementById("description");
+    if (descriptionElement) {
+      descriptionElement.innerHTML =
+        `${this.langFile['Desc']}`;
+    }
+
+  }
+
+  toggleLanguage(): void {
+
+  // Add Arabic ("ar") support and refactor language cycling
+  const supportedLanguages = ['en', 'ch', 'ar'];
+
+  // Initialize the current language (default is English)
+  this.currentLang = this.currentLang || 'en';
+
+  // Cycle through all supported languages
+  this.currentLang = supportedLanguages[
+      (supportedLanguages.indexOf(this.currentLang) + 1) % supportedLanguages.length
+  ];
+
+  // Load the appropriate language file dynamically
+  this.langFile = this.cache.json.get(`lang_${this.currentLang}`);
+
+  // Update all dynamic game text
+  this.refreshText();
   }
 
   saveGame(saveKey = "gameStateSlot1"): void {
@@ -232,15 +327,15 @@ class Platformer extends Phaser.Scene {
       won: this.won,
     };
     localStorage.setItem(saveKey, JSON.stringify(gameState));
-    console.log(`Game saved to ${saveKey}!`);
+    //console.log(`Game saved to ${saveKey}!`);
 
     // Push current state to undo stack
     this.undoStack.push(JSON.stringify(gameState));
-    console.log("State pushed to undoStack:", this.undoStack);
+    //console.log("State pushed to undoStack:", this.undoStack);
 
     // Clear the redo stack
     this.redoStack = [];
-    console.log("Redo stack cleared");
+    //console.log("Redo stack cleared");
   }
 
   autoSaveGame(): void {
@@ -251,6 +346,8 @@ class Platformer extends Phaser.Scene {
   checkAutoSave(): void {
     const autoSaveState = localStorage.getItem("autoSaveState");
     if (autoSaveState) {
+
+      // f3 
       const continueGame = confirm("Do you want to continue where you left off?");
       if (continueGame) {
         this.loadGame("autoSaveState");
@@ -271,19 +368,20 @@ class Platformer extends Phaser.Scene {
       this.won = gameState.won;
 
       this.rebuildTilemap();
-      console.log(`Game loaded from ${saveKey}!`);
+      //console.log(`Game loaded from ${saveKey}!`);
 
       if (this.won) {
         this.showWinScreen();
       }
     } else {
-      console.log(`No save state found for ${saveKey}.`);
+      //console.log(`No save state found for ${saveKey}.`);
     }
   }
 
   // Display a win screen
   showWinScreen(): void {
-    const winText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "You Win!", {
+    //f3
+    const winText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, `${this.langFile['Win']}`, {
       fontSize: "64px",
       color: "#00000",
     });
@@ -324,10 +422,10 @@ class Platformer extends Phaser.Scene {
       won: this.won,
     };
     this.undoStack.push(JSON.stringify(currentState));
-    console.log("State pushed to undoStack:", this.undoStack);
+    //console.log("State pushed to undoStack:", this.undoStack);
 
     this.redoStack = [];
-    console.log("Redo stack cleared");
+    //console.log("Redo stack cleared");
 
     const currentRow = Math.floor(this.player.y / this.TILE_SIZE);
     const currentCol = Math.floor(this.player.x / this.TILE_SIZE);
@@ -361,6 +459,7 @@ class Platformer extends Phaser.Scene {
             this.autoSaveGame();
           }
           const tile = this.grid.getTile(newRow, newCol);
+
           console.log(`Tile at (${newRow}, ${newCol}):
   Sun Level: ${tile.sunLevel}
   Water Level: ${tile.waterLevel}
@@ -422,7 +521,7 @@ class Platformer extends Phaser.Scene {
     });
 
     this.map.putTileAt(tileId, col, row, true, this.grassLayer);
-    console.log(`New flower generated at (${row}, ${col}) with species ${randomSpecies}!`);
+    //console.log(`New flower generated at (${row}, ${col}) with species ${randomSpecies}!`);
   }
 
   updateTiles(): void {
@@ -455,12 +554,12 @@ class Platformer extends Phaser.Scene {
         won: this.won,
       };
       this.redoStack.push(JSON.stringify(currentState));
-      console.log("State pushed to redoStack:", this.redoStack);
+      //console.log("State pushed to redoStack:", this.redoStack);
       const previousState = JSON.parse(this.undoStack.pop()!);
       this.loadState(previousState);
-      console.log("Undo performed! Current undoStack:", this.undoStack);
+      //console.log("Undo performed! Current undoStack:", this.undoStack);
     } else {
-      console.log("No more actions to undo.");
+      //console.log("No more actions to undo.");
     }
   }
 
@@ -478,12 +577,12 @@ class Platformer extends Phaser.Scene {
         won: this.won,
       };
       this.undoStack.push(JSON.stringify(currentState));
-      console.log("State pushed to undoStack:", this.undoStack);
+      //console.log("State pushed to undoStack:", this.undoStack);
       const nextState = JSON.parse(this.redoStack.pop()!);
       this.loadState(nextState);
-      console.log("Redo performed! Current redoStack:", this.redoStack);
+      //console.log("Redo performed! Current redoStack:", this.redoStack);
     } else {
-      console.log("No more actions to redo.");
+      //console.log("No more actions to redo.");
     }
   }
 
@@ -505,15 +604,26 @@ class Platformer extends Phaser.Scene {
   }
 
   checkWinCondition(): void {
-    if (this.reapedFlowers >= 5 && !this.won) {
+    if (this.reapedFlowers >= 1 && !this.won) {
       this.won = true;
-      console.log("You win!");
+      this.winText.visible = true;
 
-      const winText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "You Win!", {
-        fontSize: "64px",
-        color: "#00000",
-      });
-      winText.setOrigin(0.5);
+      // f3
+      // if (this.currentLang === 'en') {
+      //   const winText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, `You Win!`, {
+      //     fontSize: "64px",
+      //     color: "#00000",
+      //   });
+      //   winText.setOrigin(0.5);
+      // }
+      // else {
+      //   const winText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, `You Win!`, {
+      //     fontSize: "64px",
+      //     color: "#00000",
+      //   });
+      //   winText.setOrigin(0.5);
+      // }
+
     }
   }
 
@@ -542,29 +652,44 @@ class Platformer extends Phaser.Scene {
 
       if (tile.growthLevel === 3) {
         this.waterLevel += tile.waterLevel;
+        if (this.currentLang === 'en') {
+          this.waterCountText.setText(`Water Count:  ${this.waterLevel}`);
+        }
+        else {
+          this.waterCountText.setText(`${this.langFile['waterCount']} ${this.waterLevel}`);
+        }
+       
         this.map.putTileAt(26, col, row, true, this.grassLayer);
         this.grid.setTile(row, col, tile.sunLevel, tile.waterLevel, "dirt", 0);
         this.reapedFlowers++;
-        console.log(`Plant Reaped: ${this.reapedFlowers}, Water Count: ${this.waterLevel}`);
+    
+        if (this.currentLang === 'en'){
+          this.reapedFlowersText.setText(`Reaped Flowers: ${this.reapedFlowers}`);
+        }
+        else { 
+          this.reapedFlowersText.setText(`${this.langFile['reapCount']} ${this.reapedFlowers}`);
+        }
+        //console.log(`Plant Reaped: ${this.reapedFlowers}, Water Count: ${this.waterLevel}`);
         this.checkWinCondition();
         this.spaceKey.reset();
       }
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.oneKey)) {
-      console.log("Saving to Slot 1!");
+      //console.log("Saving to Slot 1!");
       this.saveGame("gameStateSlot1");
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.twoKey)) {
-      console.log("Saving to Slot 2!");
+      //console.log("Saving to Slot 2!");
       this.saveGame("gameStateSlot2");
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.lKey)) {
+      //  f3
       const loadSlot = prompt("Enter save slot to load (1 or 2):");
       const saveKey = loadSlot === "2" ? "gameStateSlot2" : "gameStateSlot1";
-      console.log(`Loading from ${saveKey}!`);
+      //console.log(`Loading from ${saveKey}!`);
       this.loadGame(saveKey);
     }
 
@@ -575,6 +700,12 @@ class Platformer extends Phaser.Scene {
     if (Phaser.Input.Keyboard.JustDown(this.yKey)) {
       this.redo();
     }
+
+    if (Phaser.Input.Keyboard.JustDown(this.nKey)) {
+
+      this.toggleLanguage();
+    }
+    
   }
 }
 
