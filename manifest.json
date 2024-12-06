@@ -1,0 +1,21 @@
+{
+    "name": "Phaser Game",
+    "short_name": "Game",
+    "start_url": "/TypeScriptPartFinalCMPM121/index.html",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#4CAF50",
+    "icons": [
+      {
+        "src": "/TypeScriptPartFinalCMPM121/assets/icons/icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/TypeScriptPartFinalCMPM121/assets/icons/icon-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  

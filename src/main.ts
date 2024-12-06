@@ -1,5 +1,12 @@
 "use strict";
 
+// Register the Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/TypeScriptPartFinalCMPM121/service-worker.js')
+    .then(() => console.log('Service Worker registered successfully.'))
+    .catch((error) => console.error('Service Worker registration failed:', error));
+}
+
 // Import necessary modules with type declarations
 import { PlantGrowthManager } from './GameLogic/PlantManager';  // No `.js` in TypeScript imports to rely on module resolution
 import Phaser, { Types } from "phaser";  // Import Phaser and its types

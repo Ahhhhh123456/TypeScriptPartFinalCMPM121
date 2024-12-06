@@ -3,16 +3,17 @@
     "js-yaml": "^4.1.0",
     "phaser": "^3.87.0",
     "ts-loader": "^9.5.1",
-    "vite": "^6.0.2"
+    "vite": "^6.0.3"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vite-plugin-pwa": "^0.21.1"
   },
   "scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "lint": "eslint . --ext .ts,.tsx",
-  "test": "vitest"
-}
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext .ts,.tsx",
+    "test": "vitest"
+  }
 }
