@@ -1,7 +1,7 @@
 name: Deploy static content to Pages
 on:
   push:
-    branches: ["Mobile-app-work"]
+    branches: ["main","Mobile-app-work"]
   workflow_dispatch:
 permissions:
   contents: read
