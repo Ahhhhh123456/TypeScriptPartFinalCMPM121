@@ -1,5 +1,3 @@
-"use strict";
-
 // Register the Service Worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/TypeScriptPartFinalCMPM121/service-worker.js')
@@ -8,94 +6,114 @@ if ('serviceWorker' in navigator) {
 }
 
 // Import necessary modules with type declarations
-import { PlantGrowthManager } from './GameLogic/PlantManager';  // No `.js` in TypeScript imports to rely on module resolution
-import Phaser, { Types } from "phaser";  // Import Phaser and its types
-import jsyaml from "js-yaml";  // Ensure jsyaml is properly imported with types
+import { PlantGrowthManager } from './GameLogic/PlantManager';
+import Phaser, { Types } from "phaser";
+import jsyaml from "js-yaml";
 import Load from './Scenes/Load';
 import Platformer from './Scenes/Platformer';
 
-// Initialize the PlantGrowthManager with proper typing
+// Initialize the PlantGrowthManager
 const growthManager: PlantGrowthManager = new PlantGrowthManager();
 
-// Define constants and variables for global usage
+// Constants
 const SCALE: number = 2.0;
 let cursors: Phaser.Types.Input.Keyboard.CursorKeys;
-let my: { sprite: Record<string, Phaser.GameObjects.Sprite>, text: Record<string, Phaser.GameObjects.Text>, vfx: Record<string, any> } = {
+let my: {
+  sprite: Record<string, Phaser.GameObjects.Sprite>,
+  text: Record<string, Phaser.GameObjects.Text>,
+  vfx: Record<string, any>
+} = {
   sprite: {},
   text: {},
   vfx: {}
 };
 
-// Game configuration with full typing via Phaser Types
+// Game configuration with scaling
 const config: Types.Core.GameConfig = {
-  parent: "phaser-game",
+  parent: "phaser-game", // Attach Phaser to the div with id="phaser-game"
   type: Phaser.CANVAS,
   render: {
-    pixelArt: true,  // Prevent pixel art from getting blurred when scaled
+    pixelArt: true, // Prevent pixel art from getting blurred
   },
-  width: 640,
-  height: 640,
-  scene: [Load, Platformer],  // Load and Platformer need to be typed, if available
+  width: 640, // Base game width
+  height: 640, // Base game height
+  scale: {
+    mode: Phaser.Scale.FIT, // Scale to fit available space while preserving the aspect ratio
+    autoCenter: Phaser.Scale.CENTER_BOTH // Center the game canvas on the screen
+  },
+  scene: [Load, Platformer], // Game scenes
 };
 
 // Create the Phaser game instance
 const game: Phaser.Game = new Phaser.Game(config);
 
-// Function to load events from an external YAML file
+// Add orientation handling to notify the player about orientation changes
+game.scale.on('orientationchange', (orientation: Phaser.Scale.Orientation) => {
+  if (orientation === Phaser.Scale.Orientation.PORTRAIT) {
+    console.log('Portrait mode detected! Please rotate to landscape.');
+    // Optional: You could show a notification or overlay here
+  } else if (orientation === Phaser.Scale.Orientation.LANDSCAPE) {
+    console.log('Landscape mode detected!');
+  }
+});
+
+// Add resize handling to ensure game adjusts dynamically to screen size
+game.scale.on('resize', (gameSize: Phaser.Structs.Size) => {
+  const { width, height } = gameSize;
+  console.log(`Game resized to: width=${width}, height=${height}`);
+  game.scene.scenes.forEach(scene => {
+    scene.cameras.resize(width, height);
+  });
+});
+
+// Load events from the YAML file
 function loadEvents(): void {
-  fetch('assets/events.yaml') // Adjust path based on your project structure
-    .then(response => response.text())  // Fetch the file as text
+  fetch('assets/events.yaml')
+    .then(response => response.text())
     .then((yamlText: string) => {
-      // Parse YAML content using `jsyaml`
       const events = <Array<{ event: string; time: number; action: string }>>jsyaml.load(yamlText);
-      handleEvents(events);  // Handle events after loading
+      handleEvents(events);
     })
     .catch(error => console.error('Error loading events:', error));
 }
 
-// Function to handle events based on the YAML data
+// Handle events using YAML configuration
 function handleEvents(events: Array<{ event: string; time: number; action: string }>): void {
-  events.forEach(event => {
+  events.forEach((event) => {
     console.log(`Event: ${event.event}, Time: ${event.time}, Action: ${event.action}`);
-
-    // Handle plant growth
     if (event.event === "Grow plants") {
       setTimeout(() => {
         console.log("Growing plants!");
-        growthManager.plants.forEach(plant => plant.grow());  // Grow all plants
-      }, event.time * 1000);  // Convert time to milliseconds
+        growthManager.plants.forEach(plant => plant.grow());
+      }, event.time * 1000);
     }
-
-    // Handle flower generation
     if (event.event === "Generate flower") {
       setTimeout(() => {
         console.log("Generating a new flower!");
-        growthManager.addPlant("Flower");  // Add a new flower to the manager
+        growthManager.addPlant("Flower");
       }, event.time * 1000);
     }
-
-    // Handle water level increase
     if (event.event === "Increase water level") {
       setTimeout(() => {
         console.log("Increasing water level by 2!");
-        growthManager.waterPlant(0);  // Water the first plant, as an example
+        growthManager.waterPlant(0);
       }, event.time * 1000);
     }
   });
 }
 
-// Start loading events
+// Load events
 loadEvents();
 
-// Example: Add some plants manually for initialization
+// Add example plants for initialization
 growthManager.addPlant("Flower");
 growthManager.addPlant("Tree");
 growthManager.addPlant("Cactus");
 
-// Simulate growth over time (e.g., in your game loop or with setInterval)
+// Simulate growth over time
 setInterval(() => {
-  growthManager.updateGrowth();  // Update growth for each plant
-}, 1000);  // Update every second
+  growthManager.updateGrowth();
+}, 1000); // Update every second
 
-// Simulate watering a plant (this could be triggered by other game events)
-growthManager.waterPlant(0);  // Water the first plant (e.g., the Flower)
+// Simulate watering a plant
+growthManager.waterPlant(0);
