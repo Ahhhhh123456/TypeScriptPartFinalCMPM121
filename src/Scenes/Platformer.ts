@@ -208,18 +208,6 @@ class Platformer extends Phaser.Scene {
         '<h2>Final Project<br>Arrow keys to move, space to reap, z to undo, y to redo, l to load <br>1 or 2 to save game state in slot 1 or 2</h2>';
     }
 
-    // Display instructions at the top left corner of the game screen
-    this.instructionsText = this.add.text(this.scale.width-10, 10, // Position: 10 px from top-left corner
-      `Arrow keys to move\nSpace to reap\nZ = Undo, Y = Redo, L = Load\n1/2 = Save in slots 1/2\n Press N to change language`,
-      {
-        fontSize: "16px",
-        color: "#00000",
-        fontFamily: "Arial",
-        align: "right",
-      }
-    ).setDepth(10); // Ensure it renders above the game objects
-
-    this.instructionsText.setOrigin(1, 0).setDepth(10);
 
     //test
     // Grid dimensions
