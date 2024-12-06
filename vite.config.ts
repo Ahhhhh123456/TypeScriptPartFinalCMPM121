@@ -5,9 +5,9 @@ export default defineConfig({
   base: '/TypeScriptPartFinalCMPM121/', // The base path for your app
 
   build: {
-    outDir: 'dist',  // Build output directory
+    outDir: 'dist', // Build output directory
     rollupOptions: {
-      input: './index.html'  // Entry point for the build
+      input: './index.html' // Entry point for the build
     }
   },
 
@@ -35,6 +35,7 @@ export default defineConfig({
       },
       registerType: 'autoUpdate',
       workbox: {
+        maximumFileSizeToCacheInBytes: 4000000, // Increased limit to 4 MiB
         runtimeCaching: [
           {
             urlPattern: ({ request }) => request.destination === 'image',
