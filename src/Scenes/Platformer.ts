@@ -720,7 +720,7 @@ class Platformer extends Phaser.Scene {
   }
 
   checkWinCondition(): void {
-    if (this.reapedFlowers >= 1 && !this.won) {
+    if (this.reapedFlowers >= 10 && !this.won) {
       this.won = true;
       this.winText.visible = true;
     }
