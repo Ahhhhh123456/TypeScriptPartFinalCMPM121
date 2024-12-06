@@ -9,9 +9,29 @@ const ASSETS_TO_CACHE = [
     `${BASE_URL}/manifest.json`, // Web app manifest
     `${BASE_URL}/assets/icons/icon-192x192.png`, // Icons
     `${BASE_URL}/assets/icons/icon-512x512.png`,
-    `${BASE_URL}/assets/sprites/sprite.png`, // Example sprite
-    `${BASE_URL}/assets/audio/music.mp3`, // Example audio
-    `${BASE_URL}/assets/backgrounds/bg.jpg`, // Example background
+    `${BASE_URL}/assets/ar.json`, // Example sprite
+    `${BASE_URL}/assets/ch.json`, // Example sprite
+    `${BASE_URL}/assets/down.png`, // Example sprite
+    `${BASE_URL}/assets/en.json`, // Example sprite
+    `${BASE_URL}/assets/events.yaml`, // Example sprite
+    `${BASE_URL}/assets/kenny-tiny-town-tilemap-packed.png`, // Example sprite
+    `${BASE_URL}/assets/L.png`, // Example sprite
+    `${BASE_URL}/assets/left.png`, // Example sprite
+    `${BASE_URL}/assets/n.png`, // Example sprite
+    `${BASE_URL}/assets/one.png`, // Example sprite
+    `${BASE_URL}/assets/right.png`, // Example sprite
+    `${BASE_URL}/assets/scythe.png`, // Example sprite
+    `${BASE_URL}/assets/tilemap-characters-packed.json`, // Example sprite
+    `${BASE_URL}/assets/tilemap-characters-packed.png`, // Example sprite
+    `${BASE_URL}/assets/Tiny Town.tiled-project`, // Example sprite
+    `${BASE_URL}/assets/Tiny Town.tiled-session`, // Example sprite
+    `${BASE_URL}/assets/Tiny Town.tmx`, // Example sprite
+    `${BASE_URL}/assets/TinyTownMap.json`, // Example sprite
+    `${BASE_URL}/assets/two.png`, // Example sprite
+    `${BASE_URL}/assets/up.png`, // Example sprite
+    `${BASE_URL}/assets/y.png`, // Example sprite
+    `${BASE_URL}/assets/z.png`, // Example sprite
+
     OFFLINE_URL, // Offline fallback file
 ];
 
