@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v1'; // Cache version
+const CACHE_NAME = 'v2'; // Cache version
 const BASE_URL = `${self.location.origin}`; // Base URL of the app
 
 // List of resources to cache
