@@ -35,48 +35,58 @@ const ASSETS_TO_CACHE = [
     OFFLINE_URL, // Offline fallback file
 ];
 
-// Install event - Cache specified resources
+// Install event - Cache only essential resources
 self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(ASSETS_TO_CACHE).catch((error) => {
-                console.error('Failed to cache resources:', error);
-            });
-        })
-    );
+  event.waitUntil(
+      caches.open(CACHE_NAME).then((cache) => {
+          return cache.addAll(ESSENTIAL_ASSETS).catch((error) => {
+              console.error('Failed to cache essential resources:', error);
+          });
+      })
+  );
 });
 
-// Fetch event - Serve cached resources or fallback to offline
+// Fetch event - Serve cached resources or fallback to offline for navigation
 self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            // Return cached response if available, otherwise fetch
-            return (
-                cachedResponse ||
-                fetch(event.request).catch(() => {
-                    // Serve offline.html for navigation requests if network fails
-                    if (event.request.mode === 'navigate') {
-                        return caches.match(OFFLINE_URL);
-                    }
-                })
-            );
-        })
-    );
+  event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+          // Return cached response if available
+          if (cachedResponse) {
+              return cachedResponse;
+          }
+
+          // If the resource is not in cache, fetch it from the network
+          return fetch(event.request).then((networkResponse) => {
+              // Cache the response for future use if it's a game asset
+              if (event.request.url.startsWith(BASE_URL + '/assets/')) {
+                  caches.open(CACHE_NAME).then((cache) => {
+                      cache.put(event.request, networkResponse.clone());
+                  });
+              }
+              return networkResponse;
+          }).catch(() => {
+              // Serve offline.html for navigation requests if network fails
+              if (event.request.mode === 'navigate') {
+                  return caches.match(`${BASE_URL}/offline.html`);
+              }
+          });
+      })
+  );
 });
 
 // Activate event - Cleanup old caches
 self.addEventListener('activate', (event) => {
-    const cacheWhitelist = [CACHE_NAME]; // List of valid cache versions
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (!cacheWhitelist.includes(cacheName)) {
-                        console.log(`Deleting old cache: ${cacheName}`);
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
-    );
+  const cacheWhitelist = [CACHE_NAME]; // List of valid cache versions
+  event.waitUntil(
+      caches.keys().then((cacheNames) => {
+          return Promise.all(
+              cacheNames.map((cacheName) => {
+                  if (!cacheWhitelist.includes(cacheName)) {
+                      console.log(`Deleting old cache: ${cacheName}`);
+                      return caches.delete(cacheName);
+                  }
+              })
+          );
+      })
+  );
 });
