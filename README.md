@@ -166,37 +166,28 @@ For our tools and materials, it has pretty much stayed the same. Besides that, t
 
 # How we satisfied the software requirements
 
-* [F0.a] - same as last week
+* [F0.a] - No major changes
+
+* [F0.b] - No major changes
+
+* [F0.c] - No major changes
+
+* [F0.d] - No major changes
+
+* [F0.e] - No major changes
+
+* [F0.f] - No major changes
+
+* [F0.g] - No major changes
 
 
-* [F0.b] - same as last week
+* [F1.a] - No major changes
 
+* [F1.b] - No major changes
 
-* [F0.c] - same as last week
+* [F1.c] - No major changes
 
-
-* [F0.d] - same as last week
-
-
-* [F0.e] - same as last week
-
-
-* [F0.f] - same as last week
-
-
-* [F0.g] - same as last week
-
-
-* [F1.a] - same as last week
-
-
-* [F1.b] - same as last week
-
-
-* [F1.c] - same as last week
-
-
-* [F1.d] - Same as last week
+* [F1.d] - No major changes
 
 
 * [F2.a] - We added an event loader that would read events from a yaml file that would change certain factors to the game. The events would then be put in the event handler which would be in charge of changing the required settings in the game so the events would be true. There are console logs that can enabled to show the active events.
@@ -206,6 +197,30 @@ For our tools and materials, it has pretty much stayed the same. Besides that, t
 
 
 * [F2.c] - We swapped the entire programming langauge from javascript to typescript! All the .js files became .ts files. We decided to make the entire game typescript since we were having a hard time trying to find anotehr framework to swap to, and we had worked in typescript before so we thought it would be simpler to do so. We ended up running in to a lot of problems trying to get pages to work. We spent more time trying to get our game working on pages than actaully doing the swap. We also decided to make a new repository with the typescript version of the game. Here is the link to our javascript version of the game ([https://github.com/Ahhhhh123456/Cmpm-121-Final-Project])
+
+# F3 Devlog
+
+### F0+F1+F2
+
+No major changes were made.
+
+### Internationalization [F3.a]
+
+We made it so that the in-game text, and the instructions on how to play the game would be needed translations (in the en.json, ch.json, and ar.json) As for the internal code, nothing was changed. This means that the in-game text and instructions on how to play the game would be the only parts of the game that would be needed for localization.
+
+### Localization [F3.b]
+
+Our game supports English, Chinese, and Arabic. We used Google Translate to localize our languages.
+
+The game's default language is Enlgish, however the user can change their language setting in game by pressing the "N" key on mobile or keyboard if they're on desktop. 
+
+### Mobile Installation [F3.c]
+
+We got our game installable on a smartphone by using the share button on our mobile github pages site, which allowed us to add our game to the homescreen as an application.
+
+### Mobile Play (Offline) [F3.d]
+
+To make our game mobile-compatible, we added buttons to replace the keyboard and made a service worker to keep the game going even during an offline state.
 
 ## Reflection
 
