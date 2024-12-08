@@ -36,14 +36,18 @@ const ASSETS_TO_CACHE = [
 ];
 
 // Install event - Cache only essential resources
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-      caches.open(CACHE_NAME).then((cache) => {
-          return cache.addAll(ESSENTIAL_ASSETS).catch((error) => {
-              console.error('Failed to cache essential resources:', error);
-          });
-      })
-  );
+caches.open(CACHE_NAME).then((cache) => {
+    const fetchPromises = ASSETS_TO_CACHE.map((url) => {
+        return fetch(url).then((response) => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ${url}: ${response.status}`);
+            }
+            return cache.add(url);
+        });
+    });
+    return Promise.all(fetchPromises);
+}).catch((error) => {
+    console.error('Failed to cache resources:', error);
 });
 
 // Fetch event - Serve cached resources or fallback to offline for navigation
