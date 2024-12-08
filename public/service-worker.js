@@ -1,8 +1,8 @@
 const CACHE_NAME = 'v1'; // Cache version
-const BASE_URL = `${self.location.origin}`; // Base URL of the app
+const BASE_URL = self.location.origin + `/TypeScriptPartFinalCMPM121`; // Base URL of the app
 
 // List of resources to cache
-const OFFLINE_URL = `${BASE_URL}/offline.html`; // Offline fallback page
+const OFFLINE_URL = `${BASE_URL}/index.html`; // Offline fallback page
 const ASSETS_TO_CACHE = [
     `${BASE_URL}/`, // Root index
     `${BASE_URL}/index.html`, // Main page
