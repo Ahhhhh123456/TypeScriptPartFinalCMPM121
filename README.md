@@ -210,3 +210,35 @@ For our tools and materials, it has pretty much stayed the same. Besides that, t
 ## Reflection
 
 We came to the realization that splitting up all the tasks into our "assigned" jobs was not very effective so we just started sectioning work based on workload, and if someone got stuck we would all work on that part together. We were initially trying our best to get the game working consistently without fault with refactoring as much as possible. But recently it has become challenging to stay up to date on refactoring since we are messing arround with things we dont fully understand speficily github pages. We wanted to make sure our game worked on pages before we started messign with things and refactoring the code we are using. The design has stayed pretty similar, the only difference is that we started working together as a team much more cohesively.
+
+
+# F3 Devlog
+
+
+# How we satisfied the software requirements
+F0+F1+F2
+
+No major changes were made.
+
+
+Internationalization [F3.a]
+We made it so that the in-game text, and the instructions on how to play the game would be needed translations (in the en.json, ch.json, and ar.json) As for the internal code, nothing was changed. This means that the in-game text and instructions on how to play the game would be the only parts of the game that would be needed for localization.
+
+
+Localization [F3.b]
+Our game supports English, Chinese, and Arabic. We used Google Translate to localize our languages.
+
+
+The game's default language is Enlgish, however the user can change their language setting in game by pressing the "N" key on mobile or keyboard if they're on desktop.
+
+
+Mobile Installation [F3.c]
+We got our game installable on a smartphone by using the share button on our mobile github pages site, which allowed us to add our game to the homescreen as an application.
+
+
+Mobile Play (Offline) [F3.d]
+To make our game mobile-compatible, we added buttons to replace the keyboard and made a service worker to keep the game going even during an offline state.
+
+
+# Reflection
+Our team didn't need to change tools or materials because our game engine (Phaser) supports mobile development, but we did run into issues when swapping languages and developing our mobile app. After switching from JavaScript to TypeScript, we encountered an issue with Github Pages where textures from our tileset did not work, even though our page worked fine locally. It stumped us for 2 days, and the fix was in one line of code where we were incorrectly referencing our assets folder. Also when working on our mobile iteration, our icons did not work. We had an issue with paths, and we noticed that our caches were messing up how our images loaded. We solved this issue by clearing our caches.
