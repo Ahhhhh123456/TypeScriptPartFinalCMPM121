@@ -184,7 +184,7 @@ For our tools and materials, it has pretty much stayed the same. Besides that, t
 * [F0.f] - same as last week
 
 
-* [F0.g] - same as last week
+* [F0.g] - We decided that reaping 10 flowers would be the condition to win
 
 
 * [F1.a] - same as last week
@@ -240,5 +240,5 @@ Mobile Play (Offline) [F3.d]
 To make our game mobile-compatible, we added buttons to replace the keyboard and made a service worker to keep the game going even during an offline state.
 
 
-# Reflection
+## Reflection
 Our team didn't need to change tools or materials because our game engine (Phaser) supports mobile development, but we did run into issues when swapping languages and developing our mobile app. After switching from JavaScript to TypeScript, we encountered an issue with Github Pages where textures from our tileset did not work, even though our page worked fine locally. It stumped us for 2 days, and the fix was in one line of code where we were incorrectly referencing our assets folder. Also when working on our mobile iteration, our icons did not work. We had an issue with paths, and we noticed that our caches were messing up how our images loaded. We solved this issue by clearing our caches.
