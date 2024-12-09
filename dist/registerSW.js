@@ -1,1 +1,0 @@
-if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/TypeScriptPartFinalCMPM121/sw.js', { scope: '/TypeScriptPartFinalCMPM121/' })})}

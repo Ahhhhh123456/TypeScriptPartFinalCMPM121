@@ -205,7 +205,7 @@ class Platformer extends Phaser.Scene {
     const descriptionElement = document.getElementById("description");
     if (descriptionElement) {
       descriptionElement.innerHTML =
-        '<h2>Final Project<br>Arrow keys to move, space to reap, z to undo, y to redo, l to load <br>1 or 2 to save game state in slot 1 or 2</h2>';
+        "<h2>Final Project<br>Arrow keys to move, space to reap, z to undo, y to redo, l to load <br>1 or 2 to save game state in slot 1 or 2</h2> <h2><br> n to switch language, scythe to reap plants <br> Reap 10 plants to win</h2>";
     }
 
 

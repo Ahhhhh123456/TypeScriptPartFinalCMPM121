@@ -1,8 +1,8 @@
 const CACHE_NAME = 'v1'; // Cache version
-const BASE_URL = `${self.location.origin}`; // Base URL of the app
+const BASE_URL = self.location.origin + `/TypeScriptPartFinalCMPM121`; // Base URL of the app
 
 // List of resources to cache
-const OFFLINE_URL = `${BASE_URL}/offline.html`; // Offline fallback page
+const OFFLINE_URL = `${BASE_URL}/index.html`; // Offline fallback page
 const ASSETS_TO_CACHE = [
     `${BASE_URL}/`, // Root index
     `${BASE_URL}/index.html`, // Main page
@@ -35,48 +35,62 @@ const ASSETS_TO_CACHE = [
     OFFLINE_URL, // Offline fallback file
 ];
 
-// Install event - Cache specified resources
-self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(ASSETS_TO_CACHE).catch((error) => {
-                console.error('Failed to cache resources:', error);
-            });
-        })
-    );
+// Install event - Cache only essential resources
+caches.open(CACHE_NAME).then((cache) => {
+    const fetchPromises = ASSETS_TO_CACHE.map((url) => {
+        return fetch(url).then((response) => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ${url}: ${response.status}`);
+            }
+            return cache.add(url);
+        });
+    });
+    return Promise.all(fetchPromises);
+}).catch((error) => {
+    console.error('Failed to cache resources:', error);
 });
 
-// Fetch event - Serve cached resources or fallback to offline
+// Fetch event - Serve cached resources or fallback to offline for navigation
 self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            // Return cached response if available, otherwise fetch
-            return (
-                cachedResponse ||
-                fetch(event.request).catch(() => {
-                    // Serve offline.html for navigation requests if network fails
-                    if (event.request.mode === 'navigate') {
-                        return caches.match(OFFLINE_URL);
-                    }
-                })
-            );
-        })
-    );
+  event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+          // Return cached response if available
+          if (cachedResponse) {
+              return cachedResponse;
+          }
+
+          // If the resource is not in cache, fetch it from the network
+          return fetch(event.request).then((networkResponse) => {
+              // Cache the response for future use if it's a game asset
+              if (event.request.url.startsWith(BASE_URL + '/assets/')) {
+                  caches.open(CACHE_NAME).then((cache) => {
+                      cache.put(event.request, networkResponse.clone());
+                  });
+              }
+              return networkResponse;
+          }).catch(() => {
+              // Serve offline.html for navigation requests if network fails
+              if (event.request.mode === 'navigate') {
+                  return caches.match(`${BASE_URL}/offline.html`);
+              }
+          });
+      })
+  );
 });
 
 // Activate event - Cleanup old caches
 self.addEventListener('activate', (event) => {
-    const cacheWhitelist = [CACHE_NAME]; // List of valid cache versions
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (!cacheWhitelist.includes(cacheName)) {
-                        console.log(`Deleting old cache: ${cacheName}`);
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
-    );
+  const cacheWhitelist = [CACHE_NAME]; // List of valid cache versions
+  event.waitUntil(
+      caches.keys().then((cacheNames) => {
+          return Promise.all(
+              cacheNames.map((cacheName) => {
+                  if (!cacheWhitelist.includes(cacheName)) {
+                      console.log(`Deleting old cache: ${cacheName}`);
+                      return caches.delete(cacheName);
+                  }
+              })
+          );
+      })
+  );
 });
